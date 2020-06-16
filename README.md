@@ -6,6 +6,10 @@ At the present moment, this is a prototype designed to work with dafhachaim.org 
 
 Ultimately the aim is to crowdsource other websites where it's possible to recognize identity of elements on the page.  This may also be useful to replace the Sefaria Linker button which could now run automatically on whitelisted webpages, and leverage the sidebar for enhanced display.
 
+# Demo (Video)
+
+[![Demo Video on Youtube](https://img.youtube.com/vi/6e8fYSBwJeo/0.jpg)](https://www.youtube.com/watch?v=6e8fYSBwJeo)
+ 
 
 # Example Screenshots 
 
