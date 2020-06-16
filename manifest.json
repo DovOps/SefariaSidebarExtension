@@ -1,18 +1,20 @@
 {
   "name": "Sefaria Sidebar Extension",
-  "version": "1.5",
+  "version": "1.6",
   "manifest_version": 2,
   "description": "Sefaria Sidebar Extension",
-  "icons": { "16": "Sefaria_64x64.png",
+  "icons": {
+    "16": "Sefaria_64x64.png",
     "48": "Sefaria_64x64.png",
-   "128": "Sefaria_128x128.png" },
-
-   "page_action":
-   {
-    "default_icon": {"16": "Sefaria_64x64.png",
-        "48": "Sefaria_64x64.png",
-       "128": "Sefaria_128x128.png" }
-   },
+    "128": "Sefaria_128x128.png"
+  },
+  "page_action": {
+    "default_icon": {
+      "16": "Sefaria_64x64.png",
+      "48": "Sefaria_64x64.png",
+      "128": "Sefaria_128x128.png"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
@@ -22,7 +24,8 @@
         "*://*.dafhachaim.org/*"
       ],
       "js": [
-        "jquery-1.8.2.min.js","contentScript.js"
+        "jquery-1.8.2.min.js",
+        "contentScript.js"
       ],
       "css": [
         "SefariaSidebar.css"
