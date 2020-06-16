@@ -1,6 +1,6 @@
 {
   "name": "Sefaria Sidebar Extension",
-  "version": "1.01",
+  "version": "1.5",
   "manifest_version": 2,
   "description": "Sefaria Sidebar Extension",
   "icons": { "16": "Sefaria_64x64.png",
@@ -13,11 +13,6 @@
         "48": "Sefaria_64x64.png",
        "128": "Sefaria_128x128.png" }
    },
-  "background": {
-    "scripts": [
-        "backgroundScript.js"
-    ]
-  },
   "content_scripts": [
     {
       "matches": [
@@ -34,9 +29,5 @@
       ],
       "run_at": "document_idle"
     }
-  ],
-  "permissions": [
-    "declarativeContent"
-
   ]
 }
