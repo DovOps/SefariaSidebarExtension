@@ -1,0 +1,42 @@
+{
+  "name": "Sefaria Sidebar Extension",
+  "version": "1.01",
+  "manifest_version": 2,
+  "description": "Sefaria Sidebar Extension",
+  "icons": { "16": "Sefaria_64x64.png",
+    "48": "Sefaria_64x64.png",
+   "128": "Sefaria_128x128.png" },
+
+   "page_action":
+   {
+    "default_icon": {"16": "Sefaria_64x64.png",
+        "48": "Sefaria_64x64.png",
+       "128": "Sefaria_128x128.png" }
+   },
+  "background": {
+    "scripts": [
+        "backgroundScript.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://daf-yomi.com/*",
+        "*://*.daf-yomi.com/*",
+        "*://dafhachaim.org/*",
+        "*://*.dafhachaim.org/*"
+      ],
+      "js": [
+        "jquery-1.8.2.min.js","contentScript.js"
+      ],
+      "css": [
+        "SefariaSidebar.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "declarativeContent"
+
+  ]
+}
