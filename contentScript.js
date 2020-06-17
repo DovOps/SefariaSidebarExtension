@@ -51,26 +51,11 @@ function getLinks(txt) {
   });
 }
 
-// If we are opening up a Daf- we maximize and scroll it by default
-if (location.href.indexOf("daf-yomi.com/DafYomi_Page.aspx") > -1) {
-  console.log("Portal Daf Yomi");
-  var daf = $("#ContentPlaceHolderMain_hdrMassechet").text();
-  getLinks(daf);
-}
 
-// If we are opening up a Dafhachaim we add links 
-if (location.href.indexOf("dafhachaim.org/daf") > -1) {
-  console.log("DafHachaim");
-  var daf = $(".theMasechta").text() + " " + $(".theDaf").text().split(" ")[1];
-  console.log("Daf Hachaim " + daf);
-  getLinks(daf);
-}
-
-if (location.href.indexOf("dafhachaim.org/resources") > -1) {
-  console.log("DafHachaim");
-  var txt = $(".here-i-am").text();
-  console.log("Daf Hachaim " + txt);
-
-  getLinks(txt);
-
+var ref=getSefariaReference(location.href);
+if(ref!=null){
+  console.log("Discovered reference: "+ref.site + " on "+ref.reference);
+  getLinks(ref.reference);
+} else {
+  console.log("No referenceable Sefaria Content on this page.");
 }

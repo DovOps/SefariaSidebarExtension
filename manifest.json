@@ -21,10 +21,13 @@
         "*://daf-yomi.com/*",
         "*://*.daf-yomi.com/*",
         "*://dafhachaim.org/*",
-        "*://*.dafhachaim.org/*"
+        "*://*.dafhachaim.org/*",
+        "*://e-daf.com/*",
+        "*://*.e-daf.com/*"
       ],
       "js": [
         "jquery-1.8.2.min.js",
+        "recognizers.js",
         "contentScript.js"
       ],
       "css": [
