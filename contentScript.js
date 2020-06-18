@@ -1,11 +1,12 @@
 
 function getLinks(txt) {
+  $("#sefaria-extension-output").remove();
   console.log("//www.sefaria.org.il/api/links/" + txt);
   $.get("//www.sefaria.org.il/api/links/" + txt).done(function (data) {
     data = data.filter(function (x) {
       return x.type == "ein mishpat / ner mitsvah";
     });
-    var html = "<div id='sef-sidebar-ext-btn2'></div><div id='sef-sidebar-ext' ><div class='logowrap'><div id='sef-sidebar-ext-btn'></div></div><ul>";
+    var html = "<span id='sefaria-extension-output'><div id='sef-sidebar-ext-btn2'></div><div id='sef-sidebar-ext' ><div class='logowrap'><div id='sef-sidebar-ext-btn'></div></div><ul>";
     html += "<li style='color:red;font-weight:bold'><a class='_sefaria-link' data-link='//www.sefaria.org.il/" + txt + "?lang=he&with=all&lang2=he'>" + txt + "</a></li>";
 
     $.each(data, function (i, item) {
@@ -16,6 +17,7 @@ function getLinks(txt) {
     });
     html += "</ul></div>";
     html += "<div id='sef-sidebar-ext-modal-viewer'><div class='modalbar'><a id='modal-sidebar-new-win'>New Window</a> | <a id='modal-sidebar-toggle'>Close</a></div><iframe id='sef-sidebar-ext-iframe' src='about:blank'></iframe><div class='loading-mask'>Loading Page...</div></div>";
+    html += "</span>";
     $("body").append(html);
     $(document).ready(function () {
       $("#sef-sidebar-ext-iframe").on("load", function () {
