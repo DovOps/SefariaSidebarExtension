@@ -19,14 +19,29 @@
   transition: left 0.7s ease;
 }
 
-#sef-sidebar-ext ul {
+#sef-sidebar-ext ol {
   margin: 0;
   padding: 5px 5p 5px 5px;
   padding-inline-start: 0px;
+  counter-reset: sefaria-ref-counter;
+}
+
+
+#sef-sidebar-ext li::before {
+  content: counter(sefaria-ref-counter);
+  width:25px;
+  display:block; float:right;
+  text-align:right;
+  margin-right: 2px;
+  margin-left: 2px;
+  line-height: 1;
+  color:#fff;
 }
 
 #sef-sidebar-ext li {
+  counter-increment: sefaria-ref-counter;
   list-style: none;
+  text-align:right;
   padding: 5px 5px 5px 5px;
   background: #46637f;
   border-bottom: 1px solid #233140;
@@ -69,6 +84,7 @@
   background: #46637f;
   padding-top: 10px;
   padding-right: 5px;
+  padding-bottom:10px;
 }
 
 #sef-sidebar-ext-btn {
@@ -103,7 +119,6 @@
 #sef-sidebar-ext-modal-viewer .modalbar {
   background-color: #64829e;
   padding: 2px 2px 2px 2px;
-  text-align: right;
   height: 20px;
   cursor: pointer;
 }
