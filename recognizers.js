@@ -41,6 +41,48 @@ var sefariaMatchers = [
         }
     },
 
+    {
+        pattern: /^.*realcleardaf.com\/(.*)$/mgi,
+        getReference: function (uri) {
+            var title=$('h1.shiur-title');
+            if(!title || title.text()==null|| title.text()=="") return null;
+            else title=title.text();
+              
+            return {
+                reference: title.substring(title.indexOf("|")+1),
+                site: 'RealClearDaf'
+            };
+        }
+    },
+
+    {
+        pattern: /^.*yutorah.org\/lectures\/lecture\.cfm(.*)$/mgi,
+        getReference: function (uri) {
+            var title=$('h2[itemprop=name]');
+            if(!title || title.text()==null|| title.text()=="") return null;
+            else title=title.text();
+            if( ! /(.*)( Daf )[0-9]+/.test(title)) return null;
+            else title=title.replace(" Daf","");
+            return {
+                reference: title,
+                site: 'YUTorah'
+            };
+        }
+    },
+
+    {
+        pattern: /^.*hadran.org.il\/daf\/(.*)$/mgi,
+        getReference: function (uri) {
+            var title=$('title');
+            if(!title || title.text()==null || title.text().indexOf(" - ")==-1) return null;
+            else title=title.text().substring(0,title.text().indexOf(" - "));
+            if( ! /(.*) [0-9]+/.test(title)) return null;
+            return {
+                reference: title,
+                site: 'Hadran'
+            };
+        }
+    },
 
     {
         pattern: /^.*outorah.org\/dafImage\/([^\/]+)\/([0-9]+)\/([0-1])?$/mgi,

@@ -1,6 +1,6 @@
 {
   "name": "Sefaria Sidebar Extension",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "manifest_version": 2,
   "description": "Sefaria Sidebar Extension",
   "icons": {
@@ -27,7 +27,13 @@
         "*://alldaf.org/*",
         "*://*.alldaf.org/*",
         "*://outorah.org/*",
-        "*://*.outorah.org/*"
+        "*://*.outorah.org/*",
+        "*://yutorah.org/*",
+        "*://*.yutorah.org/*",
+        "*://*.realcleardaf.com/*",
+        "*://realcleardaf.com/*",
+        "*://*.hadran.org.il/*",
+        "*://hadran.org.il/*"
       ],
       "js": [
         "jquery-1.8.2.min.js",
