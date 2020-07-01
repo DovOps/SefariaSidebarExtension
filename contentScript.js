@@ -31,11 +31,22 @@ function clearSefariaSearch(){
   $("#sef-results").empty();
 }
 
-function load_sefaria(e){
-    e.stopPropagation();
-    $(".loading-mask").show();
-    $("#sef-sidebar-ext-iframe").hide();
-    $('#sef-sidebar-ext-iframe').attr('src', $(e.target).data('link'));
+var sefaria_current=null;
+
+function sefariaLinkClicked(e){
+  e.stopPropagation();
+  var url=$(e.target).data('link');
+  load_sefaria(url);
+}
+function load_sefaria(url, force){
+    var same=(sefaria_current===url) ;
+    if(!same || force){
+      sefaria_current=url;
+      if(force) url+= ((url.indexOf("?")>-1)?"&":"?")+ "r="+new Date().getTime();
+      $(".loading-mask").show();
+      $("#sef-sidebar-ext-iframe").hide();
+      $('#sef-sidebar-ext-iframe').attr('src', url);
+    }
     $('#sef-sidebar-ext-modal-viewer').toggleClass('visible', true);
     $("#sef-sidebar-ext ol li").toggleClass('active', false);
     $(e.target).parent().toggleClass('active', true);
@@ -84,7 +95,7 @@ async function getLinks(txt, mode) {
     });
     html+="</div>";
     $.each(pages, function(i,frame) {
-      html += "<ol id='"+frame.id+"'><li style='color:red;font-weight:bold'><span class='sef-folder sef-hidden' id='sef-closed-"+frame.id+"'>📁</span><span  class='sef-folder'  id='sef-opened-"+frame.id+"'>📂</span><a class='_sefaria-link sef-category-main' data-link='//www.sefaria.org.il/" + frame.page + "?lang=he&with=all&lang2=he'>" + frame.page + "</a></li>";
+      html += "<ol id='"+frame.id+"'><li style='color:red;font-weight:bold'><span class='sef-folder' id='sef-closed-"+frame.id+"'>📁</span><span  class='sef-folder'  id='sef-opened-"+frame.id+"'>📂</span><a class='_sefaria-link sef-category-main' data-link='//www.sefaria.org.il/" + frame.page + "?lang=he&with=all&lang2=he'>" + frame.page + "</a></li>";
       var data=frame.data;
     $.each(data, function (i, item) {
       console.log(item.ref);
@@ -95,7 +106,7 @@ async function getLinks(txt, mode) {
     html+="</ol>";
    });
     html += "</div>";
-    html += "<div id='sef-sidebar-ext-modal-viewer'><div class='modalbar'><a id='modal-sidebar-new-win'>New Window</a> | <a id='modal-sidebar-toggle'>Close</a></div><iframe id='sef-sidebar-ext-iframe' src='about:blank'></iframe><div class='loading-mask'>Loading Page...</div></div>";
+    html += "<div id='sef-sidebar-ext-modal-viewer'><div class='modalbar'><a id='modal-sidebar-new-win'>New Window</a> | <a id='modal-sidebar-reload'>Reload</a> | <a id='modal-sidebar-toggle'>Close</a></div><iframe id='sef-sidebar-ext-iframe' src='about:blank'></iframe><div class='loading-mask'>Loading Page...</div></div>";
     html += "</span>";
     $("body").append(html);
     $(document).ready(function () {
@@ -119,16 +130,16 @@ async function getLinks(txt, mode) {
 
       $.each(pages,function(i,page){
         var id=page.id;
+        // initial toggle
+        togglePage(id,true);
+        // subscribe to header bar
         $("#"+id+" li:nth-of-type(1)").click(function(){
-          var myPage=pages.find(x=>x.id===id);
-          if(myPage.open = !myPage.open);
-          $("#sef-closed-"+id).toggleClass("sef-hidden",!myPage.open);
-          $("#sef-opened-"+id).toggleClass("sef-hidden",myPage.open);
-          $("#"+id+" li:nth-of-type(n+2)").toggleClass("sef-hidden",myPage.open);
-        });
+          togglePage(id);
+       });
       });
    
-      $("#sef-results a").live('click', load_sefaria);
+     
+      $("#sef-results a").live('click', sefariaLinkClicked);
       $("#sef-sidebar-ext-iframe").on("load", function () {
         $(".loading-mask").hide();
         $("#sef-sidebar-ext-iframe").show();
@@ -149,7 +160,11 @@ async function getLinks(txt, mode) {
         $('#sef-sidebar-ext-modal-viewer').toggleClass('visible', false);
         window.open($("#sef-sidebar-ext-iframe").attr("src"));
       });
-      $('._sefaria-link').on('click', load_sefaria);
+      $('#modal-sidebar-reload').on('click', function (e) {
+        e.stopPropagation();
+        load_sefaria(sefaria_current,true);
+      });
+      $('._sefaria-link').on('click', sefariaLinkClicked);
     });
 
  
@@ -184,6 +199,17 @@ function toggleCategory(cat, state){
   $(".sef-category-item[data-category=\""+cat+"\"]").toggleClass("sef-cat-hidden",!state);
 }
 
+function togglePage(id, state){
+    var myPage=pages.find(x=>x.id===id);
+
+    if(state!=null) myPage.open=state;
+    else myPage.open = !myPage.open;
+
+    $("#sef-closed-"+id).toggleClass("sef-hidden",myPage.open);
+    $("#sef-opened-"+id).toggleClass("sef-hidden",!myPage.open);
+    $("#"+id+" li:nth-of-type(n+2)").toggleClass("sef-hidden",!myPage.open);
+
+}
 function getData(txt){
   return new Promise((resolve,reject)=>{
   $.get("//www.sefaria.org.il/api/links/" + txt).done(function (data) {

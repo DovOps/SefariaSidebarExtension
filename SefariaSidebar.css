@@ -28,6 +28,9 @@
   padding:2px 2px 2px 2px;
   margin: 3px 3px 3px 3px;
   cursor:pointer;
+  font-size:11px;
+  background: #46637f;
+  border-radius:200px;
   text-decoration:none;
 }
 .sef-cat-hdr:HOVER {
@@ -62,14 +65,16 @@
 }
 #sef-sidebar-ext li:nth-of-type(1) {
  background-color:#233140 !important;
+ font-size:13px;
 }
 
 
 #sef-sidebar-ext li:nth-of-type(n+2)::before {
   content: counter(sefaria-ref-counter);
   width:25px;
-  display:block; float:right;
-  text-align:right;
+  display:block;
+  float:right;
+  text-align:center;
   margin-right: 2px;
   margin-left: 2px;
   line-height: 1;
@@ -78,6 +83,7 @@
 
 
 #sef-sidebar-ext li {
+  font-size:12px;
   counter-increment: sefaria-ref-counter;
   list-style: none;
   text-align:right;
