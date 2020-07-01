@@ -32,6 +32,7 @@ function clearSefariaSearch(){
 }
 
 function load_sefaria(e){
+    e.stopPropagation();
     $(".loading-mask").show();
     $("#sef-sidebar-ext-iframe").hide();
     $('#sef-sidebar-ext-iframe').attr('src', $(e.target).data('link'));
@@ -40,24 +41,60 @@ function load_sefaria(e){
     $(e.target).parent().toggleClass('active', true);
 }
 
-function getLinks(txt) {
+var pages=[];
+
+async function getLinks(txt, mode) {
   $("#sefaria-extension-output").remove();
   console.log("//www.sefaria.org.il/api/links/" + txt);
-  $.get("//www.sefaria.org.il/api/links/" + txt).done(function (data) {
-    data = data.filter(function (x) {
-      return x.type == "ein mishpat / ner mitsvah";
+
+  // Check if I'm getting both sides or just one side
+  if(mode && mode==DOUBLE){
+    console.log("Getting both sides of the page");
+      if(/.*([א-ת]+)$/.test(txt)){
+        pages.push({page:txt + " א",title:"עמוד א",id:"sef-side-a"});
+        pages.push({page:txt + " ב",title:"עמוד ב",id:"sef-side-b"});
+      } else if (/.*([0-9]+)$/.test(txt)){
+        pages.push({page:txt+"a",title:"עמוד א",id:"sef-side-a"});
+        pages.push({page:txt+"b",title:"עמוד ב",id:"sef-side-b"});
+      }
+      console.log("INITIAL LINK TEXT: " +txt)
+    } else {
+      pages.push({page:txt,id:"sef-side-a"});
+    }
+    pages.map((frame)=>{
+      frame.open=true;
+      frame.page=frame.page.trim();
     });
+    console.log("PAGES: "+JSON.stringify(pages));
+    var categories=[];
+    var categoryCounts={};
+    // playing with async/await - for some reason this likes not being in a callback
+    for(var i=0;i<pages.length;++i){
+      pages[i].data=await getData(pages[i].page);;
+      pages[i].data.forEach(d=>{if(!categoryCounts[d.category]) categoryCounts[d.category]=1; else categoryCounts[d.category]++;});
+    }
+    categories=Object.keys(categoryCounts).sort();
+
+    console.log("Frames: "+pages.length);
     var html = "<span id='sefaria-extension-output'><div id='sef-sidebar-ext-btn2'></div><div id='sef-sidebar-ext' ><div class='logowrap'><div id='sef-sidebar-ext-btn'></div></div>";
     html+="<div id='sef-search'><input type='text' id='sef-search-box' style='width:100%' placeholder='Search Sefaria'/><ol id='sef-results'></ol></div>";
-    html += "<ol><li style='color:red;font-weight:bold'><a class='_sefaria-link' data-link='//www.sefaria.org.il/" + txt + "?lang=he&with=all&lang2=he'>" + txt + "</a></li>";
-
+    html+="<div id='sef-categories'>";
+    categories.forEach(cat=>{
+      html+="<a class='sef-cat-hdr ' data-category='"+cat+"' id='sef-cat-"+cat+"'>"+cat+" ("+categoryCounts[cat]+")</a> ";
+    });
+    html+="</div>";
+    $.each(pages, function(i,frame) {
+      html += "<ol id='"+frame.id+"'><li style='color:red;font-weight:bold'><span class='sef-folder sef-hidden' id='sef-closed-"+frame.id+"'>📁</span><span  class='sef-folder'  id='sef-opened-"+frame.id+"'>📂</span><a class='_sefaria-link sef-category-main' data-link='//www.sefaria.org.il/" + frame.page + "?lang=he&with=all&lang2=he'>" + frame.page + "</a></li>";
+      var data=frame.data;
     $.each(data, function (i, item) {
       console.log(item.ref);
       console.log(item.sourceHeRef);
       console.log("//www.sefaria.org.il/" + item.sourceHeRef)
-      html += "<li><a class='_sefaria-link' data-link='//www.sefaria.org.il/" + item.sourceHeRef + "?lang=he&lang2=he'>" + item.sourceHeRef + "</a></li>";
+      html += "<li class='sef-category-item' data-category='"+item.category+"'><a class='_sefaria-link' data-link='//www.sefaria.org.il/" + item.ref + "?lang=he&lang2=he'>" + item.sourceHeRef + "</a></li>";
     });
-    html += "</ol></div>";
+    html+="</ol>";
+   });
+    html += "</div>";
     html += "<div id='sef-sidebar-ext-modal-viewer'><div class='modalbar'><a id='modal-sidebar-new-win'>New Window</a> | <a id='modal-sidebar-toggle'>Close</a></div><iframe id='sef-sidebar-ext-iframe' src='about:blank'></iframe><div class='loading-mask'>Loading Page...</div></div>";
     html += "</span>";
     $("body").append(html);
@@ -69,6 +106,27 @@ function getLinks(txt) {
         if (e.which == 13) sefariaFeelingLucky();
       });
 
+        $(".sef-cat-hdr").click(function(){
+          toggleCategory($(this).data("category"));
+        });
+     
+
+      // hide all but halakha
+      $.each(categories,function(i,cat){
+        toggleCategory(cat, false);
+      });
+      toggleCategory("Halakhah",true);
+
+      $.each(pages,function(i,page){
+        var id=page.id;
+        $("#"+id+" li:nth-of-type(1)").click(function(){
+          var myPage=pages.find(x=>x.id===id);
+          if(myPage.open = !myPage.open);
+          $("#sef-closed-"+id).toggleClass("sef-hidden",!myPage.open);
+          $("#sef-opened-"+id).toggleClass("sef-hidden",myPage.open);
+          $("#"+id+" li:nth-of-type(n+2)").toggleClass("sef-hidden",myPage.open);
+        });
+      });
    
       $("#sef-results a").live('click', load_sefaria);
       $("#sef-sidebar-ext-iframe").on("load", function () {
@@ -94,14 +152,46 @@ function getLinks(txt) {
       $('._sefaria-link').on('click', load_sefaria);
     });
 
-  });
+ 
 }
-
 
 var ref=getSefariaReference(location.href);
 if(ref!=null){
   console.log("Discovered reference: "+ref.site + " on "+ref.reference);
-  getLinks(ref.reference);
+  getLinks(ref.reference, ref.mode);
 } else {
   console.log("No referenceable Sefaria Content on this page.");
+}
+
+var activeCategories=[];
+function toggleCategory(cat, state){
+  if(state==null){
+    if(activeCategories.indexOf(cat)>-1){
+      state=false;
+    }
+    else state=true;
+  }
+
+  var idx=activeCategories.indexOf(cat);
+  if(state){
+    if(idx==-1) activeCategories.push(cat);
+  }  else {
+    if(idx>-1) delete activeCategories[idx];
+  }
+
+  console.log("Toggle Cat" +cat+"/"+state);
+  $(".sef-cat-hdr[data-category=\""+cat+"\"]").toggleClass("sef-cat-hdr-active",state);
+  $(".sef-category-item[data-category=\""+cat+"\"]").toggleClass("sef-cat-hidden",!state);
+}
+
+function getData(txt){
+  return new Promise((resolve,reject)=>{
+  $.get("//www.sefaria.org.il/api/links/" + txt).done(function (data) {
+    data.map(item => { item.section=item.anchorRef.substring(0,item.anchorRef.indexOf(":")); })
+    data = data.filter(function (x) {
+      return true;//x.type == "ein mishpat / ner mitsvah";
+    });
+    resolve(data);
+  });
+});
 }

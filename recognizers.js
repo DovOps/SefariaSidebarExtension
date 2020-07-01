@@ -1,9 +1,12 @@
+var SINGLE='single', DOUBLE='double';
+
 var sefariaMatchers = [
     {
         pattern: /^.*daf-yomi.com\/(DafYomi_Page\.aspx)/mgi,
         getReference: function (uri) {
             return {
                 reference: $("#ContentPlaceHolderMain_hdrMassechet").text(),
+                mode:SINGLE,
                 site: 'Portal Daf Yomi'
             };
         }
@@ -16,6 +19,7 @@ var sefariaMatchers = [
             
             return {
                 reference: $(".here-i-am").text(),
+                mode:DOUBLE,
                 site: 'Daf HaChaim'
             };
         }
@@ -26,6 +30,7 @@ var sefariaMatchers = [
         getReference: function (uri) {
             return {
                 reference: document.title.replace("E-DAF.com ", "").toLowerCase(),
+                mode:SINGLE,
                 site: 'E-DAF.com'
             };
         }
@@ -36,6 +41,7 @@ var sefariaMatchers = [
         getReference: function (uri) {
             return {
                 reference: $('meta[name=description]').attr("content").toLowerCase(),
+                mode:DOUBLE,
                 site: 'AllDaf'
             };
         }
@@ -50,6 +56,7 @@ var sefariaMatchers = [
               
             return {
                 reference: title.substring(title.indexOf("|")+1),
+                mode:DOUBLE,
                 site: 'RealClearDaf'
             };
         }
@@ -65,6 +72,7 @@ var sefariaMatchers = [
             else title=title.replace(" Daf","");
             return {
                 reference: title,
+                mode:DOUBLE,
                 site: 'YUTorah'
             };
         }
@@ -79,6 +87,7 @@ var sefariaMatchers = [
             if( ! /(.*) [0-9]+/.test(title)) return null;
             return {
                 reference: title,
+                mode: DOUBLE,
                 site: 'Hadran'
             };
         }
