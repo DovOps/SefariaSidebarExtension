@@ -37,6 +37,8 @@ function sefariaLinkClicked(e){
   e.stopPropagation();
   var url=$(e.target).data('link');
   load_sefaria(url);
+  $("#sef-sidebar-ext ol li").toggleClass('active', false);
+  $(e.target).parent().toggleClass('active', true);
 }
 function load_sefaria(url, force){
     var same=(sefaria_current===url) ;
@@ -48,8 +50,6 @@ function load_sefaria(url, force){
       $('#sef-sidebar-ext-iframe').attr('src', url);
     }
     $('#sef-sidebar-ext-modal-viewer').toggleClass('visible', true);
-    $("#sef-sidebar-ext ol li").toggleClass('active', false);
-    $(e.target).parent().toggleClass('active', true);
 }
 
 var pages=[];

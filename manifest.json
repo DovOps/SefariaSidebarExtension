@@ -1,6 +1,6 @@
 {
   "name": "Sefaria Sidebar Extension",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "manifest_version": 2,
   "description": "Sefaria Sidebar Extension",
   "icons": {
@@ -33,7 +33,9 @@
         "*://*.realcleardaf.com/*",
         "*://realcleardaf.com/*",
         "*://*.hadran.org.il/*",
-        "*://hadran.org.il/*"
+        "*://hadran.org.il/*",
+        "*://*.steinsaltz-center.org/*",
+        "*://steinsaltz-center.org/*"
       ],
       "js": [
         "jquery-1.8.2.min.js",

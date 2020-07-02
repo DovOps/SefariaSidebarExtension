@@ -63,6 +63,24 @@ var sefariaMatchers = [
     },
 
     {
+        pattern: /^.*steinsaltz-center.org\/vault\/DafYomi\/.*$/mgi,
+        getReference: function (uri) {
+            console.log(uri=(window.top?window.top:window).location.href);
+            console.log("steinsaltz: "+uri);
+            var title=(""+uri).replace(/.*\/vault\/DafYomi\/([^\.]+).*/,"$1");
+            
+            console.log("title: "+title);
+            if(!title  || title.length==0)return null;
+    
+            return {
+                reference:title.replace("_"," "),
+                mode:DOUBLE,
+                site: 'Steinsaltz PDF'
+            };
+        }
+    },
+
+    {
         pattern: /^.*yutorah.org\/lectures\/lecture\.cfm(.*)$/mgi,
         getReference: function (uri) {
             var title=$('h2[itemprop=name]');
@@ -77,6 +95,23 @@ var sefariaMatchers = [
             };
         }
     },
+
+    {
+        pattern: /^.*yutorah.org\/daf\.cfm.*$/mgi,
+        getReference: function (uri) {
+            var title=$('.daf-title span');
+            if(!title || title.length==0) return null;
+            title=title.text();
+            var lastChar=(title.charAt(title.length-1));
+            if(lastChar == 'a' || lastChar=='b') title=title.substring(0,title.length-1);
+            return {
+                reference: title,
+                mode:DOUBLE,
+                site: 'YUTorah On the Daf'
+            };
+        }
+    },
+
 
     {
         pattern: /^.*hadran.org.il\/daf\/(.*)$/mgi,

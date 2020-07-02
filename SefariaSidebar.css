@@ -87,9 +87,10 @@
   counter-increment: sefaria-ref-counter;
   list-style: none;
   text-align:right;
-  padding: 5px 5px 5px 5px;
+  padding: 5px 5px 5px 5px !important;
   background: #46637f;
   border-bottom: 1px solid #233140;
+  margin: 0px 0px 0px 0px !important;
 }
 
 #sef-sidebar-ext li a {
