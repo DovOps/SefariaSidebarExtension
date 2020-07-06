@@ -107,7 +107,7 @@
 }
 #sef-sidebar-ext-btn2 {
   display: block;
-  position:absolute;
+  position:fixed;
   background-repeat: no-repeat;
   overflow: hidden;
   background-size: cover;
