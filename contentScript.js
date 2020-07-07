@@ -95,7 +95,7 @@ async function getLinks(txt, mode) {
     });
     html+="</div>";
     $.each(pages, function(i,frame) {
-      html += "<ol id='"+frame.id+"'><li style='color:red;font-weight:bold'><span class='sef-folder' id='sef-closed-"+frame.id+"'>📁</span><span  class='sef-folder'  id='sef-opened-"+frame.id+"'>📂</span><a class='_sefaria-link sef-category-main' data-link='//www.sefaria.org.il/" + escape(frame.page) + "?lang=he&with=all&lang2=he'>" + frame.page + "</a></li>";
+      html += "<ol id='"+frame.id+"'><li style='color:red;font-weight:bold'><span class='sef-folder' id='sef-closed-"+frame.id+"'>📁</span><span  class='sef-folder'  id='sef-opened-"+frame.id+"'>📂</span><a class='_sefaria-link sef-category-main' data-link='//www.sefaria.org.il/" + frame.page + "?lang=he&with=all&lang2=he'>" + frame.page + "</a></li>";
       var data=frame.data;
     $.each(data, function (i, item) {
       console.log(item.ref);
