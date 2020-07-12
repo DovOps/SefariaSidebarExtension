@@ -26,7 +26,7 @@ Ultimately the aim is to crowdsource other websites where it's possible to recog
 
 # Demo (Video)
 
-[![Demo Video on Youtube](https://img.youtube.com/vi/MguSzMFEqF8/0.jpg)](https://www.youtube.com/watch?v=MguSzMFEqF8)
+[![Demo Video on Youtube](https://img.youtube.com/vi/j1RhWncSkS8/0.jpg)](https://www.youtube.com/watch?v=j1RhWncSkS8)
  
 # Example Screenshots 
 
