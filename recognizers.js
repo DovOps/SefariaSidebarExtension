@@ -39,8 +39,10 @@ var sefariaMatchers = [
     {
         pattern: /^.*alldaf.org\/p\/[0-9]+(\?.*)?$/mgi,
         getReference: function (uri) {
+            var ref=getAllDafReference(); 
+            
             return {
-                reference: $('meta[name=description]').attr("content").toLowerCase(),
+                reference: ref,
                 mode:DOUBLE,
                 site: 'AllDaf'
             };
@@ -150,7 +152,7 @@ function getSefariaReference(uri) {
     var uri = uri.toLowerCase();
     console.log("My URI " + uri);
     sefariaMatchers.forEach(function (matcher) {
-        console.log(matcher.pattern);
+        console.log("Matching "+uri+" "+matcher.pattern);
         var matches = false;
         if (matcher.pattern instanceof RegExp) {
             matches = matcher.pattern.test(uri);
@@ -168,18 +170,34 @@ function getSefariaReference(uri) {
 }
 
 // Special Treatment for AllDAf which does inline DOM loading instead of normal page loads
-var alldaf_current=null;
-if(location.href.indexOf("alldaf.org")>-1){
-    alldaf_current=$('meta[name=description]').attr("content").toLowerCase();
-
-function mutationHandler (mutationRecords) {
-    var now=$('meta[name=description]').attr("content").toLowerCase();
-    if(alldaf_current !=now && /^.* [1-9]+$/.test(now)){
-        console.log("[[ AllDaf Change Event ]] >> "+now);
-        alldaf_current=now;
-        getLinks(alldaf_current);
-    }
+function getAllDafReference(){
+    console.log("Get AllDaf Reference");
+    var ref="";
+    $(".multiselect__single").each((x,y)=>{ref+=$(y).text()+" ";});
+    console.log("AllDaf REF:"+ref);
+    return ref.trim();
 }
 
-new MutationObserver(mutationHandler).observe($("head").get(0),{childList:true});
+var alldaf_current=null;
+var current_url=location.href;
+
+if(location.href.indexOf("alldaf.org")>-1){
+    alldaf_current=getAllDafReference(); 
+
+function alldafChanged () {
+    removeSidebar();
+    var ref=getAllDafReference();
+    console.log(alldaf_current +" !=? "+ref);
+    if(alldaf_current !=ref && /^(.* [1-9]+)( \-.*)?$/.test(ref)){
+        console.log("[[ AllDaf Change Event ]] >> "+ref);
+        alldaf_current=ref;
+        refreshExtension(alldaf_current, DOUBLE);
+    } 
+}
+setInterval(function(){
+    if(location.href!=current_url){    
+        current_url=location.href;
+        alldafChanged();
+    }
+},2000);
 }

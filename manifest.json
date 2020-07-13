@@ -1,6 +1,6 @@
 {
   "name": "Sefaria Sidebar Extension",
-  "version": "1.6.11",
+  "version": "1.6.13",
   "manifest_version": 2,
   "description": "Sefaria Sidebar Extension",
   "icons": {
@@ -45,7 +45,7 @@
       "css": [
         "SefariaSidebar.css"
       ],
-      "run_at": "document_end"
+      "run_at": "document_idle"
     }
   ]
 }
