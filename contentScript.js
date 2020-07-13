@@ -42,6 +42,9 @@ function sefariaLinkClicked(e) {
   $(e.target).parent().toggleClass('active', true);
 }
 
+function escapeQuotes(str){
+  return str.replace("'","\\'").replace("\"","\\\"");
+}
 function load_sefaria(url, force) {
   var same = (sefaria_current === url);
   if (!same || force) {
@@ -107,8 +110,8 @@ async function getLinks(txt, mode) {
     $.each(data, function (i, item) {
       console.log(item.ref);
       console.log(item.sourceHeRef);
-      console.log("//www.sefaria.org.il/" + item.sourceHeRef)
-      html += "<li class='sef-category-item' data-category='" + item.category + "'><a class='_sefaria-link' data-link='//www.sefaria.org.il/" + escape(item.ref) + "?lang=he&lang2=he'>" + item.sourceHeRef + "</a></li>";
+      console.log("//www.sefaria.org.il/" + escapeQuotes(item.ref));
+      html += "<li class='sef-category-item' data-category='" + item.category + "'><a class='_sefaria-link' data-link='//www.sefaria.org.il/" + escapeQuotes(item.ref) + "?lang=he&lang2=he'>" + item.sourceHeRef + "</a></li>";
     });
     html += "</ol>";
   });
@@ -243,3 +246,13 @@ function getData(txt) {
 
 
 setupExtension(location.href);
+
+function handleCopy(win){
+  $('#sef-sidebar-ext').toggleClass('visible', true);
+  $("#sef-search-box").val(win.getSelection().toString());
+  search_topics({srcElement:$("#sef-search-box").get()});
+};
+
+$("iframe").each(function(idx,win){ var w=win; win.addEventListener("copy",function(){handleCopy(w);});});
+
+window.addEventListener("copy",function(){ handleCopy(window); });
