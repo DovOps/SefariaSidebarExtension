@@ -54,7 +54,7 @@
   float:right;
 }
 
-.sef-hidden, .sef-cat-hidden{ display:none;}
+.sef-hidden, .sef-cat-hidden, .sef-filtered { display:none;}
 
 
 #sef-sidebar-ext ol {
