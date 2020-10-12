@@ -13,7 +13,8 @@ function search_topics(e) {
       .done(function (data) {
         if (data.completion_objects) {
           var result = data.completion_objects.filter(function (val) { return val.type == 'ref' });
-          var html = "<li><A id='sef-feeling-lucky' style='color:red;' class='_sefaria_link' data-link=\"//sefaria.org.il/" + escape(val) + "\">" + val + "</a></li>";
+          var safeValue=$("<div>").text(val).html();
+          var html = "<li><A id='sef-feeling-lucky' style='color:red;' class='_sefaria_link' data-link=\"//sefaria.org.il/" + escape(val) + "\">" + safeValue + "</a></li>";
           result.forEach(function (x) {
             html += "<li><A class='_sefaria_link' data-link=\"//sefaria.org.il/" + escape(x.key) + "\">" + x.title + "</a></li>";
           });
