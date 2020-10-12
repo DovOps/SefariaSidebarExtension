@@ -65,7 +65,7 @@ function sefariaLinkClicked(e) {
 }
 
 function escapeQuotes(str){
-  return str.replace(/([\"\'])/g,"\\$1");
+  return str.replace(/([\"\'\\])/g,"\\$1");
 }
 function load_sefaria(url, force) {
   var same = (sefaria_current === url);
