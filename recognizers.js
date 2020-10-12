@@ -1,7 +1,7 @@
 var SINGLE='single', DOUBLE='double';
 
-var sefariaMatchers = [
-    {
+var sefariaMatchers = {
+  DAFYOMIPORTAL:  {
         pattern: /^.*daf-yomi.com\/(DafYomi_Page\.aspx)/mgi,
         getReference: function (uri) {
             return {
@@ -12,7 +12,7 @@ var sefariaMatchers = [
         }
     },
 
-    {
+  DAFHACHAIM:  {
         pattern: /^.*dafhachaim.org\/(daf|resources)\/?.*/mgi,
         getReference: function (uri) {
             var ref=null;
@@ -25,7 +25,7 @@ var sefariaMatchers = [
         }
     },
     
-    {
+   EDAF: {
         pattern: /^.*e-daf.com\/?$|^.*e-daf.com\/index\.asp(\?.*)?$/mgi,
         getReference: function (uri) {
             return {
@@ -36,7 +36,7 @@ var sefariaMatchers = [
         }
     },
 
-    {
+  ALLDAF:  {
         pattern: /^.*alldaf.org\/p\/[0-9]+(\?.*)?$/mgi,
         getReference: function (uri) {
             var ref=getAllDafReference(); 
@@ -49,7 +49,7 @@ var sefariaMatchers = [
         }
     },
 
-    {
+  REALCLEARDAF:  {
         pattern: /^.*realcleardaf.com\/(.*)$/mgi,
         getReference: function (uri) {
             var title=$('h1.shiur-title');
@@ -64,7 +64,7 @@ var sefariaMatchers = [
         }
     },
 
-    {
+  STEINSALTZ:  {
         pattern: /^.*steinsaltz-center.org\/vault\/DafYomi\/.*$/mgi,
         getReference: function (uri) {
             console.log(uri=(window.top?window.top:window).location.href);
@@ -82,7 +82,7 @@ var sefariaMatchers = [
         }
     },
 
-    {
+  YUTORAH_SHIUR:  {
         pattern: /^.*yutorah.org\/lectures\/lecture\.cfm(.*)$/mgi,
         getReference: function (uri) {
             var title=$('h2[itemprop=name]');
@@ -98,7 +98,7 @@ var sefariaMatchers = [
         }
     },
 
-    {
+   YUTORAH_DAF: {
         pattern: /^.*yutorah.org\/daf\.cfm.*$/mgi,
         getReference: function (uri) {
             var title=$('.daf-title span');
@@ -114,8 +114,7 @@ var sefariaMatchers = [
         }
     },
 
-
-    {
+   HADRAN: {
         pattern: /^.*hadran.org.il\/daf\/(.*)$/mgi,
         getReference: function (uri) {
             var title=$('title');
@@ -130,7 +129,7 @@ var sefariaMatchers = [
         }
     },
 
-    {
+   OUTORAH:  {
         pattern: /^.*outorah.org\/dafImage\/([^\/]+)\/([0-9]+)\/([0-1])?$/mgi,
         getReference: function (uri, self) {
             var ref=uri.replace(self.pattern, function(str, masechta, daf, amud){
@@ -143,19 +142,26 @@ var sefariaMatchers = [
         }
     },
 
-];
+};
 
-
-
-function getSefariaReference(uri) {
-    var result = null;
+function getSefariaReference(uri){
     var uri = uri.toLowerCase();
     console.log("My URI " + uri);
-    sefariaMatchers.forEach(function (matcher) {
+    var result=null;
+    Object.values(sefariaMatchers).forEach(function (matcher) {
+        var match=checkSefariaReference(uri,matcher);
+        if(match) result=match;
+    });
+    console.log("Get SefRef Returning "+result);
+    return result;
+}
+
+function checkSefariaReference(uri, matcher) {
         console.log("Matching "+uri+" "+matcher.pattern);
         var matches = false;
         if (matcher.pattern instanceof RegExp) {
             matches = matcher.pattern.test(uri);
+            matcher.pattern.lastIndex=0; // reset the internal state to allow for reuse
         } else {
             matches = (uri.indexOf(matcher.pattern.toLowerCase()) > -1);
         }
@@ -163,10 +169,9 @@ function getSefariaReference(uri) {
         if(matches) {
             var ref= matcher.getReference(uri, matcher);
             console.log("Reference: "+JSON.stringify(ref));
-            result = ref;
+            return ref;
         } 
-    });
-    return result;
+        return null;
 }
 
 // Special Treatment for AllDAf which does inline DOM loading instead of normal page loads
@@ -181,14 +186,26 @@ function getAllDafReference(){
 var alldaf_current=null;
 var current_url=location.href;
 
-if(location.href.indexOf("alldaf.org")>-1){
+// Alldaf specific functionality
+if(checkSefariaReference(current_url.toLowerCase(),sefariaMatchers.ALLDAF) !=null)
+{
+    console.log("Found Sefaria Reference for ALLDAF - Enabling special Features");
     alldaf_current=getAllDafReference(); 
 
 function alldafChanged () {
-    removeSidebar();
+
     var ref=getAllDafReference();
-    console.log(alldaf_current +" !=? "+ref);
-    if(alldaf_current !=ref && /^(.* [1-9]+)( \-.*)?$/.test(ref)){
+    console.log(alldaf_current +" == "+ref+"?");
+    if(alldaf_current !=ref){
+        console.log("[[ AllDaf Change Event ]] >> "+ref);
+        // it's not the same so lets trash the sidebar
+        removeSidebar();
+    } else if(ref!=null) {
+        console.log("[[ AllDaf - Same Daf, so lets leave] alone]");
+        return;
+    }
+    if( /^(.* [1-9]+)( \-.*)?$/.test(ref)){
+        // It is a valid daf though
         console.log("[[ AllDaf Change Event ]] >> "+ref);
         alldaf_current=ref;
         refreshExtension(alldaf_current, DOUBLE);
