@@ -1,8 +1,8 @@
 {
-  "name": "Sefaria Sidebar Extension",
+  "name": "Talmud Reference Sidebar Extension (Powered by Sefaria)",
   "version": "1.6.16",
   "manifest_version": 2,
-  "description": "Sefaria Sidebar Extension",
+  "description": "Bring the comprehensive Sefaria library to any webpage that is learning a specific Daf of Gemara.",
   "icons": {
     "16": "Sefaria_64x64.png",
     "48": "Sefaria_64x64.png",
