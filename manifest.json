@@ -4,13 +4,13 @@
   "manifest_version": 2,
   "description": "Bring the comprehensive Sefaria library to any webpage that is learning a specific Daf of Gemara.",
   "icons": {
-    "16": "Icon_16.png",
+    "16": "Icon_64.png",
     "48": "Icon_64.png",
     "128": "Icon_128.png"
   },
   "page_action": {
     "default_icon": {
-      "16": "Icon_16.png",
+      "16": "Icon_64.png",
       "48": "Icon_64.png",
       "128": "Icon_128.png"
     }
