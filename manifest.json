@@ -1,20 +1,14 @@
 {
   "name": "Talmud Sidebar Extension (Powered by Sefaria)",
-  "version": "1.6.18",
-  "manifest_version": 2,
+  "version": "1.6.21",
+  "manifest_version": 3,
   "description": "Bring the comprehensive Sefaria library to any webpage that is learning a specific Daf of Gemara.",
   "icons": {
     "16": "Icon_64.png",
     "48": "Icon_64.png",
     "128": "Icon_128.png"
   },
-  "page_action": {
-    "default_icon": {
-      "16": "Icon_64.png",
-      "48": "Icon_64.png",
-      "128": "Icon_128.png"
-    }
-  },
+  "action": {},
   "content_scripts": [
     {
       "matches": [
@@ -38,7 +32,7 @@
         "*://steinsaltz-center.org/*"
       ],
       "js": [
-        "jquery-1.8.2.min.js",
+        "jquery-3.6.1.min.js",
         "recognizers.js",
         "contentScript.js"
       ],

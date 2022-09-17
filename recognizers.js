@@ -28,11 +28,14 @@ var sefariaMatchers = {
    EDAF: {
         pattern: /^.*e-daf.com\/?$|^.*e-daf.com\/index\.asp(\?.*)?$/mgi,
         getReference: function (uri) {
-            return {
+            var result= {
                 reference: document.title.replace("E-DAF.com ", "").toLowerCase(),
                 mode:SINGLE,
                 site: 'E-DAF.com'
             };
+            // stuff sefaria doesnt grok
+            result.reference=result.reference.replace('kesuvos','ketubot');
+            return result;
         }
     },
 

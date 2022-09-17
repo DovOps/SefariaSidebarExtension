@@ -177,7 +177,7 @@ async function getLinks(txt, mode) {
     });
 
 
-    $("#sef-results a").live('click', sefariaLinkClicked);
+    $("#sef-results").on('click', 'a', sefariaLinkClicked);
     $("#sef-sidebar-ext-iframe").on("load", function () {
       $(".loading-mask").hide();
       $("#sef-sidebar-ext-iframe").show();
@@ -268,7 +268,9 @@ function togglePage(id, state) {
 function getData(txt) {
   console.log("GetData "+txt);
   return new Promise((resolve, reject) => {
-    $.get("//www.sefaria.org.il/api/links/" + txt).done(function (data) {
+    var apiTarget="//www.sefaria.org.il/api/links/" + txt;
+    console.log("API Target: "+apiTarget);
+    $.get(apiTarget).done(function (data) {
       data.map(item => { item.section = item.anchorRef.substring(0, item.anchorRef.indexOf(":")); })
       console.log("GetData "+txt+"-->"+data.length);
       data = data.filter(function (x) {

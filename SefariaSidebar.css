@@ -28,17 +28,19 @@
   padding:2px 2px 2px 2px;
   margin: 3px 3px 3px 3px;
   cursor:pointer;
-  font-size:11px;
+  font-size:11px !important;
   background: #46637f;
   border-radius:200px;
   text-decoration:none;
 }
 .sef-cat-hdr:HOVER {
   color:#900;
+  font-size:11px !important;
 }
 .sef-cat-hdr-active, .sef-cat-hdr-active:HOVER {
   background-color:#ffa;
   color:#46637f;
+  font-size:11px !important;
 }
 
 
@@ -161,6 +163,7 @@
 
 #sef-sidebar-ext-modal-viewer iframe {
   width: 100%;
+  margin-top:10px;
   height: calc(100% - 20px);
   border: none;
 }
