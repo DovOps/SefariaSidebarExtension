@@ -243,10 +243,34 @@ function setupExtension(url) {
   var ref = getSefariaReference(url);
   if (ref != null) {
     console.log("Discovered reference: " + ref.site + " on " + ref.reference);
+    cleanUpReference(ref);
     refreshExtension(ref.reference, ref.mode);
   } else {
     console.log("No referenceable Sefaria Content on this page.");
   }
+}
+
+function cleanUpReference(ref){
+  // Would be nice if sefaria was more tolerant of alt spellings and case inesensitive 2word names
+  var alt_terms={
+    "sukah":"sukkah",
+    "yevamos":"yevamot",
+    "kesuvos":"ketubot",
+    "nidah":"niddah",
+    "makos":"makkot",
+    "horayos":"horayot",
+    "menachos":"menachot",
+    "chulin":"chullin",
+    "erchin":"arakhin",
+    "kerisus":"keritot"
+  }
+  var reference=ref.reference;
+  Object.keys(alt_terms).map(k=>{reference=reference.replace(k,alt_terms[k]);});
+  reference=reference.replace(/\b\w/g, function(c) {
+    return c.toUpperCase();
+  });
+  console.log("Cleaned up reference: "+reference);
+  ref.reference=reference;
 }
 
 function refreshExtension (reference,mode){
